@@ -162,3 +162,8 @@ inline void Encoder::resetPos()
 {
     _enc_pos = 0;
 }
+
+inline int32_t Encoder::getEncPos()
+{
+    return _enc_pos;
+}

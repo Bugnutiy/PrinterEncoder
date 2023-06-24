@@ -44,7 +44,9 @@ endBtn endLeft(PIN_END_LEFT, PINMODE_END_LR, END_TRUE_LR);
 endBtn endRight(PIN_END_RIGHT, PINMODE_END_LR, END_TRUE_LR);
 endBtn endUp(PIN_END_RIGHT, PINMODE_END_LR, END_TRUE_LR);
 endBtn endDown(PIN_END_RIGHT, PINMODE_END_LR, END_TRUE_LR);
-GStepper2<STEPPER2WIRE> stepper(0, PIN_STEP, PIN_DIR, PIN_ENABLE); // Шаговый двигатель
+GStepper2<STEPPER2WIRE> stepperLR(0, PIN_STEP, PIN_DIR, PIN_ENABLE); // Шаговый двигатель
+GStepper2<STEPPER2WIRE> stepperUD(0, PIN_STEP, PIN_DIR, PIN_ENABLE); // Шаговый двигатель
+
 
 void setup()
 {

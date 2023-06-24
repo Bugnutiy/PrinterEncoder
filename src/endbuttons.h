@@ -2,7 +2,6 @@
 #include "Arduino.h"
 #include "functions.h"
 
-
 class endBtn
 {
 private:
@@ -21,7 +20,7 @@ endBtn::endBtn(byte pin, byte pin_mode, byte truth, uint16_t debounce_end)
 {
     pinMode(pin, pin_mode);
     _pin = pin;
-    _truth = 1 ^ truth;
+    _truth = !truth;
     _debounce_end = debounce_end;
 }
 bool endBtn::state()

@@ -19,6 +19,9 @@
 #define ENC_TYPE 1
 #endif
 #endif
+#ifndef ENC_INVERSE
+#define ENC_INVERSE false // инвертировать
+#endif
 
 #ifndef ENC_READ
 #define ENC_READ(PIN) ((PIND >> (PIN)) & 0x01)
@@ -40,7 +43,7 @@ protected:
     volatile boolean _flag, _resetFlag;
     volatile byte _curState, _prevState;
 #endif
-#if ENC_ALG == 3               // Переменные для 3 алгоритма
+#if ENC_ALG == 3                // Переменные для 3 алгоритма
     volatile bool _encFlag = 0; // флаг поворота
     volatile byte _reset = 0, _last = 0;
 #endif
@@ -94,9 +97,18 @@ inline void Encoder::encInterrupt()
 #if (ENC_TYPE == 1)
         _turnFlag = !_turnFlag;
         if (_turnFlag)
+#if ENC_INVERSE
+            _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? -1 : 1;
+#else
             _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? 1 : -1;
+#endif
+
+#else
+#if ENC_INVERSE
+        _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? -1 : 1;
 #else
         _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? 1 : -1;
+#endif
 #endif
         _lastState = _state0;
     }
@@ -106,10 +118,17 @@ inline void Encoder::encInterrupt()
     if (_resetFlag && _curState == 0b11)
     {
         if (_prevState == 0b10)
-            _enc_pos++;
-        if (_prevState == 0b01)
+#if ENC_INVERSE
             _enc_pos--;
-        _resetFlag = 0;
+#else
+            _enc_pos++;
+#endif
+        if (_prevState == 0b01)
+#if ENC_INVERSE
+            _enc_pos++;
+#else
+            _enc_pos--;
+#endif _resetFlag = 0;
         _flag = true; // Можно юзать как индикатор срабатывания
     }
     if (_curState == 0b00)
@@ -122,9 +141,17 @@ inline void Encoder::encInterrupt()
     {
         int prevCount = _enc_pos;
         if (_last == 0b10)
-            _enc_pos++;
-        else if (_last == 0b01)
+#if ENC_INVERSE
             _enc_pos--;
+#else
+            _enc_pos++;
+#endif
+        else if (_last == 0b01)
+#if ENC_INVERSE
+            _enc_pos++;
+#else
+            _enc_pos--;
+#endif
         if (prevCount != _enc_pos)
             _encFlag = 1; // Индикатор
         _reset = 0;
@@ -134,7 +161,10 @@ inline void Encoder::encInterrupt()
     _last = state;
 #endif
 }
-
+/**
+ * @brief Полный сброс всех полей энкодера
+ *
+ */
 inline void Encoder::resetEnc()
 {
 #if ENC_ALG == 1 // Переменные для первого алгоритма
@@ -150,14 +180,17 @@ inline void Encoder::resetEnc()
     _prevState = 0;
     _enc_pos = 0;
 #endif
-#if ENC_ALG == 3 // Переменные для 3 алгоритма
+#if ENC_ALG == 3  // Переменные для 3 алгоритма
     _encFlag = 0; // флаг поворота
     _reset = 0;
     _last = 0;
     _enc_pos = 0;
 #endif
 }
-
+/**
+ * @brief Сброс позиции энкодера на 0
+ *
+ */
 inline void Encoder::resetPos()
 {
     _enc_pos = 0;

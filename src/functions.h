@@ -1,5 +1,13 @@
 #pragma once
 #include "Arduino.h"
+/**
+ * @brief Функция быстрого чтения для uno/nano
+ *
+ * @param pin Номер пина
+ * @return состояние пина
+ * @return true
+ * @return false
+ */
 bool fastRead(uint8_t pin)
 {
     if (pin < 8)
@@ -13,3 +21,5 @@ bool fastRead(uint8_t pin)
         return ((PINC >> (pin - 14)) & 0x01);
     return 0;
 }
+
+

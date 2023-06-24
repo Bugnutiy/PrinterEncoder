@@ -7,8 +7,8 @@
 #define PIN_ENC_B 3 // вход Б
 #endif
 
-#ifndef PINMODE
-#define PINMODE INPUT_PULLUP // Какой у нас пинмод
+#ifndef PINMODE_ENC
+#define PINMODE_ENC INPUT_PULLUP // Какой у нас пинмод
 #endif
 
 #ifndef ENC_ALG
@@ -65,8 +65,8 @@ void encInterruptHandler()
 
 Encoder::Encoder()
 {
-    pinMode(PIN_ENC_A, PINMODE);
-    pinMode(PIN_ENC_B, PINMODE);
+    pinMode(PIN_ENC_A, PINMODE_ENC);
+    pinMode(PIN_ENC_B, PINMODE_ENC);
     encoder_ptr = this;
 #if ENC_ALG == 1 // Прерывание для первого алгоритма
     attachInterrupt(digitalPinToInterrupt(PIN_ENC_A), encInterruptHandler, CHANGE);

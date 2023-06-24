@@ -1,9 +1,7 @@
 #pragma once
 #include "Arduino.h"
 #include "functions.h"
-#ifndef DEBOUNCE_END
-#define DEBOUNCE_END 20
-#endif
+
 
 class endBtn
 {
@@ -35,7 +33,7 @@ bool endBtn::state()
         {
             return _state; // 1
         }
-        _debounce = millis() + DEBOUNCE_END;
+        _debounce = millis() + _debounce_end;
         return _state; // 0
     }
 

@@ -26,14 +26,28 @@
 #define PINMODE_BTN_R INPUT_PULLUP // Пинмод кнопки вправо
 #define BTN_R_TRUE LOW             // Логика срабатывания (LOW/HIGH)
 
-// Настройки двигателей
-#define PIN_STEP_LR 4          // Пин STEP горизонтального двигателя
-#define PIN_DIR_LR 5           // Пин dir горизонтального двигателя
-#define PIN_ENABLE_LR 6        // Пин enable, возможно он называется set, горизонтального двигателя
+#define PIN_BTN_U A0               // Пин кнопки вверх
+#define PINMODE_BTN_U INPUT_PULLUP // Пинмод кнопки вверх
+#define BTN_U_TRUE LOW             // Логика срабатывания (LOW/HIGH)
 
-#define PIN_STEP_UD 4          // Пин STEP вертикального двигателя
-#define PIN_DIR_UD 5           // Пин dir вертикального двигателя
-#define PIN_ENABLE_UD 6        // Пин enable, возможно он называется set, вертикального двигателя
+#define PIN_BTN_D A1               // Пин кнопки вниз
+#define PINMODE_BTN_D INPUT_PULLUP // Пинмод кнопки вниз
+#define BTN_D_TRUE LOW             // Логика срабатывания (LOW/HIGH)
+
+#define FILTER_BTN_LR 20 // Фильтр мс X
+#define FILTER_BTN_UD 20 // Фильтр мс Y
+
+#define BTN_HOLD_LR 1500 // Задержка перед автоматическим движением X (0 для отключения)
+#define BTN_HOLD_UD 1500 // Задержка перед автоматическим движением Y (0 для отключения)
+
+// Настройки двигателей
+#define PIN_STEP_LR 4   // Пин STEP горизонтального двигателя
+#define PIN_DIR_LR 5    // Пин dir горизонтального двигателя
+#define PIN_ENABLE_LR 6 // Пин enable, возможно он называется set, горизонтального двигателя
+
+#define PIN_STEP_UD 4   // Пин STEP вертикального двигателя
+#define PIN_DIR_UD 5    // Пин dir вертикального двигателя
+#define PIN_ENABLE_UD 6 // Пин enable, возможно он называется set, вертикального двигателя
 
 // Настройки концевиков и лазера
 #define PIN_END_LEFT 7              // левый концевик
@@ -62,10 +76,12 @@
 // настройки движений и таймингов
 #define MOTOR_X_ENC_SPEED 200 // Скорость мотора в шагах/секунду. Чем выше число, тем быстрее двигатель
 #define MOTOR_Y_ENC_SPEED 200 // Скорость мотора в шагах/секунду. Чем выше число, тем быстрее двигатель
+
 #define MOTOR_L_BUTTON_SPEED 100 // Скорость движения по кнопке влево
 #define MOTOR_R_BUTTON_SPEED 100 // Скорость движения по кнопке вправо
 #define MOTOR_U_BUTTON_SPEED 100 // Скорость движения по кнопке вверх
 #define MOTOR_D_BUTTON_SPEED 100 // Скорость движения по кнопке вниз
+
 #define MOTOR_L_AUTO_SPEED 50
 #define MOTOR_R_AUTO_SPEED 50
 #define MOTOR_U_AUTO_SPEED 50

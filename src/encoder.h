@@ -16,7 +16,7 @@
 #endif
 #if ENC_ALG == 1
 #ifndef ENC_TYPE
-#define ENC_TYPE 2
+#define ENC_TYPE 1
 #endif
 #endif
 
@@ -94,9 +94,9 @@ inline void Encoder::encInterrupt()
 #if (ENC_TYPE == 1)
         _turnFlag = !_turnFlag;
         if (_turnFlag)
-            _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? -1 : 1;
+            _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? 1 : -1;
 #else
-        _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? -1 : 1;
+        _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? 1 : -1;
 #endif
         _lastState = _state0;
     }

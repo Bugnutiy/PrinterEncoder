@@ -6,13 +6,16 @@ class endBtn
 {
 private:
     byte _pin;
-    bool _state, _truth;
+    bool _state, _truth, _statePrev;
     unsigned long _debounce = 0;
     uint16_t _debounce_end = 20;
 
 public:
     endBtn(byte pin, byte pin_mode, byte truth, uint16_t debounce_end = 20);
     bool state();
+    bool statePrev();
+    void statePrevSet();
+    void statePrevSet(bool);
     // ~endBtn();
 };
 
@@ -45,6 +48,20 @@ bool endBtn::state()
         }
         return _state;
     }
-    _state = (fastRead(_pin) == _truth);
+    _state = (fastRead(_pin) ^ _truth);
     return _state;
+}
+
+inline bool endBtn::statePrev()
+{
+    return _statePrev;
+}
+
+inline void endBtn::statePrevSet()
+{
+    _statePrev = _state;
+}
+inline void endBtn::statePrevSet(bool st)
+{
+    _statePrev = st;
 }

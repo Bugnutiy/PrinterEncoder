@@ -10,7 +10,8 @@
  */
 
 // Вертикальные кнопки по клику, горизонтальныые по Холду, Старт по клику.
-#define DEBUG 115200 // скорость монитора порта. Или 0 для отключения
+
+// #define DEBUG 115200 // скорость монитора порта. Или 0 для отключения
 
 // Настройка энкодера
 #define PIN_ENC_A 2              // вход А
@@ -18,10 +19,11 @@
 #define PINMODE_ENC INPUT_PULLUP // Пинмод энкодера
 #define ENC_ALG 1                // Алгоритм чтения энкодера (1 - 3)
 #define ENC_TYPE 2               // Настройка для алгоритма №1 (1 или 2)
-#define ENC_INVERSE false        // инвертировать
+#define ENC_INVERSE true         // инвертировать
+#define ENC_TRIGGER 18            // Пульсы, означающие старт печати
 // #define ENC_READ 1               // Старый читатель энкодера
 
-#define STEP_DIVIDER 17 // Сколько шагов энкодера на 1 шаг двигателя
+#define STEP_DIVIDER 8 // Сколько шагов энкодера на 1 шаг двигателя
 
 // Кнопки
 #define PIN_BTN_L 6                // Пин кнопки влево
@@ -61,49 +63,52 @@
 #define PIN_STEP_UD 9 // Пин STEP вертикального двигателя
 #define PIN_DIR_UD 10 // Пин dir вертикального двигателя
 // #define PIN_ENABLE_UD A5 // Пин enable, возможно он называется set, вертикального двигателя
+#define MOTOR_Y_INVERT false // Инверсия двигателя
 
 // Настройки концевиков и лазера
 #define PIN_END_LEFT 4              // левый концевик
 #define PIN_END_RIGHT 5             // правый концевик
 #define PINMODE_END_LR INPUT_PULLUP // Пинмод концевиков
 #define END_TRUE_LR LOW             // Логика срабатывания (LOW/HIGH)
-#define END_HOME_LR 0               // начальная позиция слева (0), начальная позиция справа (1)
-#define FILTER_END_LR 200           // Фильтр мс
+#define FILTER_END_LR 20            // Фильтр мс
 
 #define PIN_LASER A4               // Пин лазера
-#define PINMODE_LASER INPUT_PULLUP // Пин лазера
+#define PINMODE_LASER INPUT_PULLUP // Пинмод лазера
 #define LASER_TRUE HIGH            // Логика срабатывания (LOW/HIGH)
-#define FILTER_LASER 200           // Фильтр мс
+#define FILTER_LASER 20            // Фильтр мс
+#define LASER_MIN_STEPS 500        // Минималка лазера по шагам
 
 #define PIN_END_UP A2               // Верхний концевик
 #define PIN_END_DOWN A3             // Нижний концевик
 #define PINMODE_END_UD INPUT_PULLUP // Пинмод концевиков
 #define END_TRUE_UD LOW             // Логика срабатывания (LOW/HIGH)
-#define END_HOME_UD 1               // начальная позиция снизу (0), начальная позиция сверху (1)
-#define FILTER_END_UD 20            // Фильтр мс
+#define FILTER_END_UD 200           // Фильтр мс
+
+#define END_HOME_LR 0 // Стартовая позиция слева (0), справа (1)
+#define END_HOME_UD 1 // Стартовая позиция снизу (0), начальная позиция сверху (1)
+#define HOME_POS 100  // Стартовая позиция от концевика
 
 // лотки, датчики бумаги, и т.д.
-#define PIN_PAPER_DAT 11      // Пин датчика бумаги
-#define PAPER_DAT_TRUE HIGH   // Бумага есть = HIGH или LOW
-#define PAPER_TIME_START 1100 // Тайминг датчика бумаги после начала печати
-#define PAPER_TIME_END 0      // Тайминг датчика бумаги после конца печати
+#define PIN_PAPER_DAT 11   // Пин датчика бумаги
+#define PAPER_DAT_TRUE LOW // Бумага есть = HIGH или LOW
 
 // настройки движений и таймингов
-#define MOTOR_X_ENC_SPEED 200 // Скорость мотора в шагах/секунду. Чем выше число, тем быстрее двигатель
-#define MOTOR_Y_ENC_SPEED 200 // Скорость мотора в шагах/секунду. Чем выше число, тем быстрее двигатель
+#define MOTOR_X_ENC_SPEED 700 // Скорость мотора в шагах/секунду. Чем выше число, тем быстрее двигатель
 
-#define MOTOR_L_BUTTON_SPEED 200  // Скорость движения по кнопке влево
-#define MOTOR_R_BUTTON_SPEED 200  // Скорость движения по кнопке вправо
-#define MOTOR_U_BUTTON_SPEED 2000 // Скорость движения по кнопке вверх
-#define MOTOR_D_BUTTON_SPEED 2000 // Скорость движения по кнопке вниз
+#define MOTOR_L_BUTTON_SPEED 100  // Скорость движения по кнопке влево
+#define MOTOR_R_BUTTON_SPEED 100  // Скорость движения по кнопке вправо
+#define MOTOR_U_BUTTON_SPEED 3000 // Скорость движения по кнопке вверх
+#define MOTOR_D_BUTTON_SPEED 3000 // Скорость движения по кнопке вниз
 
-#define MOTOR_L_AUTO_SPEED 100
-#define MOTOR_R_AUTO_SPEED 100
-#define MOTOR_U_AUTO_SPEED 2000
-#define MOTOR_D_AUTO_SPEED 2000
+#define MOTOR_L_AUTO_SPEED 300
+#define MOTOR_R_AUTO_SPEED 300
+#define MOTOR_Y_HOME_SPEED 3000
 
 #define MOTOR_X_HOME_SPEED 200
-
+// Тайминги
+#define PAPER_TIME_START 1100 // Тайминг датчика бумаги после начала печати
+#define ENC_TIME_START 2300
+#define ENC_TIME_START_SPEED 10
 #define GS_NO_ACCEL
 ////////////////////////////////////////////////////////*Настройки кончились*//////////////////////////////////////////////////////////////
 
@@ -136,8 +141,8 @@ GButton btnStart(PIN_BTN_START, HIGH_PULL, BTN_START_TRUE);
 GButton btnUp(PIN_BTN_U, HIGH_PULL, BTN_U_TRUE);
 GButton btnDown(PIN_BTN_D, HIGH_PULL, BTN_D_TRUE);
 
-GStepper2<STEPPER2WIRE> stepperLR(0, PIN_STEP_LR, PIN_DIR_LR); // Шаговый двигатель X
-GStepper2<STEPPER2WIRE> stepperUD(0, PIN_STEP_UD, PIN_DIR_UD); // Шаговый двигатель Y
+GStepper2<STEPPER2WIRE> stepperX(0, PIN_STEP_LR, PIN_DIR_LR); // Шаговый двигатель X
+GStepper2<STEPPER2WIRE> stepperY(0, PIN_STEP_UD, PIN_DIR_UD); // Шаговый двигатель Y
 
 void setup()
 {
@@ -174,13 +179,20 @@ void setup()
     pinMode(PIN_LASER, PINMODE_LASER);
 
     pinMode(PIN_PAPER_DAT, OUTPUT);
+    digitalWrite(PIN_PAPER_DAT, !PAPER_DAT_TRUE);
 
     pinMode(PIN_END_RIGHT, PINMODE_END_LR);
     pinMode(PIN_END_LEFT, PINMODE_END_LR);
-    stepperLR.brake();
-    stepperLR.reverse(MOTOR_X_INVERT);
-    stepperLR.setAcceleration(1);
-    stepperUD.brake();
+    pinMode(PIN_END_DOWN, PINMODE_END_UD);
+    pinMode(PIN_END_UP, PINMODE_END_UD);
+
+    stepperX.brake();
+    stepperX.reverse(MOTOR_X_INVERT);
+    stepperX.setMaxSpeed(MOTOR_X_ENC_SPEED);
+    // stepperX.setAcceleration(1);
+    stepperY.brake();
+    stepperY.reverse(MOTOR_Y_INVERT);
+    stepperY.setMaxSpeed(MOTOR_Y_HOME_SPEED);
 }
 /**
  * @brief 0 - режим StandBy;
@@ -196,32 +208,122 @@ void setup()
  *
  */
 uint8_t worker = 8;
+uint8_t worker1 = 0;
+bool paper_dat = 0;
+unsigned long timer_paper, timer_encoder, timer_stop_encoder;
 #if DEBUG
 unsigned long deb_timer = 0;
 #endif
 void loop()
 {
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     switch (worker)
     {
     case 0: // 0 - режим StandBy;
-        stepperLR.brake();
-        stepperUD.brake();
+        // stepperX.brake();
+        // stepperY.brake();
         // worker = 8;
         break;
     case 1: // 1 - движение на домашний концевик с лазерной коррекцией; (Влево наверно)
-        /* code */
+            ////////////////////////////////////////
+        switch (worker1)
+        {
+        case 0:
+            if (!laser.state() && !stepperX.getStatus() && !stepperY.getStatus())
+            {
+                stepperX.setSpeed(-MOTOR_X_HOME_SPEED);
+            }
+            if (laser.state())
+            {
+                stepperX.brake();
+                if (laser.state() && !stepperY.getStatus())
+                {
+                    stepperY.setTarget(stepperY.getCurrent() - LASER_MIN_STEPS);
+                }
+            }
+            if (endLeft.state())
+            {
+                worker1++;
+            }
+            break;
+        case 1:
+            stepperX.reset();
+            stepperX.setMaxSpeed(MOTOR_X_HOME_SPEED);
+            stepperX.setTarget(10);
+            while (stepperX.getStatus())
+            {
+                stepperX.tick();
+            }
+            stepperX.brake();
+            stepperX.setSpeed(-20);
+
+            while (!endLeft.state())
+            {
+                stepperX.tick();
+            }
+            stepperX.brake();
+            stepperX.reset();
+            worker++;
+            worker1 = 0;
+            break;
+        default:
+            break;
+        }
+        /////////////////
         break;
     case 2: // 2 - движение к стартовой позиции;
-        /* code */
+        stepperX.setMaxSpeed(MOTOR_X_HOME_SPEED);
+        stepperX.setTarget(HOME_POS);
+        while (stepperX.getStatus())
+        {
+            stepperX.tick();
+        }
+        stepperX.setMaxSpeed(MOTOR_X_ENC_SPEED);
+        worker++;
+        encoder.resetPos();
+
         break;
     case 3: // 3 - Ожидание начала печати;
-        /* code */
+        if (encoder.getPos() > ENC_TRIGGER || encoder.getPos() < -ENC_TRIGGER)
+        {
+            worker++;
+            timer_paper = millis() + PAPER_TIME_START;
+            timer_encoder = millis() + ENC_TIME_START;
+        }
+
         break;
     case 4: // 4 - начало печати (датчики бумаги, ждём когда принтер перестанет сходить с ума);
-        /* coe */
+        if (!paper_dat && millis() > timer_paper)
+        {
+            DD("PAPER:");
+            paper_dat = 1;
+            digitalWrite(PIN_PAPER_DAT, PAPER_DAT_TRUE);
+        }
+        if (millis() >= timer_encoder)
+        {
+            encoder.resetPos();
+            int speed = 10000;
+            uint32_t enc_pos_temp = 0;
+            timer_stop_encoder = millis() + ENC_TIME_START_SPEED;
+            while (speed)
+            {
+                enc_pos_temp += abs(encoder.getPos());
+                if (millis() >= timer_stop_encoder)
+                {
+                    timer_stop_encoder = millis() + ENC_TIME_START_SPEED;
+                    speed = enc_pos_temp;
+                    encoder.resetPos();
+                    enc_pos_temp = 0;
+                }
+            }
+            worker++;
+            stepperX.reset();
+            encoder.resetPos();
+        }
+
         break;
     case 5: // 5 - печать (работа от энкодера);
-        stepperLR.setTarget(encoder.getEncPos() / STEP_DIVIDER);
+        stepperX.setTarget(encoder.getPos() / STEP_DIVIDER);
         break;
     case 6: // 6 - конец печати;
         /* code */
@@ -231,103 +333,110 @@ void loop()
         break;
     case 8: // от кнопки
         // worker = 0;
+        digitalWrite(PIN_PAPER_DAT, !PAPER_DAT_TRUE);
         break;
     default:
 
         break;
     }
 
-    // Кнопка влево
+    ////////////////////////////////////////////////////////////////////// Кнопка влево
     if (btnLeft.isPress())
     {
         worker = 8;
-        stepperLR.setSpeed(-MOTOR_L_BUTTON_SPEED);
-        // stepperLR.dir = -1;
+        stepperX.setSpeed(-MOTOR_L_BUTTON_SPEED);
     }
     if (btnLeft.isRelease())
     {
         if (!btnLeft.isHolded())
-            stepperLR.brake();
+            stepperX.brake();
     }
     if (btnLeft.isHold())
     {
         worker = 8;
-        stepperLR.setSpeed(-MOTOR_L_AUTO_SPEED);
+        stepperX.setSpeed(-MOTOR_L_AUTO_SPEED);
     }
 
-    // Кнопка вправо
+    /////////////////////////////////////////////////////////////////// Кнопка вправо
     if (btnRight.isPress())
     {
         worker = 8;
-        stepperLR.setSpeed(MOTOR_R_BUTTON_SPEED);
+        stepperX.setSpeed(MOTOR_R_BUTTON_SPEED);
     }
     if (btnRight.isRelease())
     {
         if (!btnRight.isHolded())
-            stepperLR.brake();
+            stepperX.brake();
     }
     if (btnRight.isHold())
     {
         worker = 8;
-        stepperLR.setSpeed(MOTOR_R_AUTO_SPEED);
+        stepperX.setSpeed(MOTOR_R_AUTO_SPEED);
     }
 
-    // Кнопка вверх
+    ///////////////////////////////////////////////////////////////// Кнопка вверх
     if (btnUp.isPress())
     {
-        worker = 8;
-        stepperUD.setSpeed(MOTOR_U_BUTTON_SPEED);
-        // stepperLR.dir = -1;
+        // worker = 8;
+        stepperY.setSpeed(MOTOR_U_BUTTON_SPEED);
     }
     if (btnUp.isRelease())
     {
         // if (!btnUp.isHolded())
-            stepperUD.brake();
+        stepperY.brake();
     }
     // if (btnUp.isHolded())
     // {
     //     worker = 8;
-    //     stepperUD.setSpeed(MOTOR_U_AUTO_SPEED);
+    //     stepperY.setSpeed(MOTOR_U_AUTO_SPEED);
     // }
 
-    // Кнопка вниз
+    //////////////////////////////////////////////////////////////////////////// Кнопка вниз
     if (btnDown.isPress())
     {
-        worker = 8;
-        stepperUD.setSpeed(-MOTOR_D_BUTTON_SPEED);
-        // stepperLR.dir = -1;
+        // worker = 8;
+        stepperY.setSpeed(-MOTOR_D_BUTTON_SPEED);
+        // stepperX.dir = -1;
     }
     if (btnDown.isRelease())
     {
         // if (!btnDown.isHolded())
-            stepperUD.brake();
+        stepperY.brake();
     }
     // if (btnDown.isHold())
     // {
     //     worker = 8;
-    //     stepperUD.setSpeed(-MOTOR_D_AUTO_SPEED);
+    //     stepperY.setSpeed(-MOTOR_D_AUTO_SPEED);
     // }
 
-    // Кнопка старт
-    // if (btnStart.isPress())
-    // {
-    //     worker = 4;
-    // }
+    //////////////////////////////////////////////////////////////////////////////Кнопка старт
+    if (btnStart.isPress())
+    {
+        worker = 1;  // Движение домой с лазером
+        worker1 = 0; // Сброс первого рабочего
+    }
 // DDD(laser.state());
 // delay(200);
 #if DEBUG
     if (millis() > deb_timer)
     {
-        deb_timer = millis() + 1000;
+        deb_timer = millis() + 2000;
         DD("Y Motor Status:");
-        DDD(stepperUD.getStatus());
+        DDD(stepperY.getStatus());
         DD("Y Motor Dir:");
-        DDD(stepperUD.dir);
+        DDD(stepperY.dir);
         DDD();
-        DD("UButton:");
-        DDD(btnUp.state());
-        DD("DButton:");
-        DDD(btnDown.state());
+        DD("X Motor Status:");
+        DDD(stepperY.getStatus());
+        DD("X Motor Dir:");
+        DDD(stepperY.dir);
+        DDD();
+        DD("WORKER:");
+        DDD(worker);
+        DD("WORKER1:");
+        DDD(worker1);
+        // DD("DButton:");
+        // DDD(btnDown.state());
         DDD();
     }
 #endif
@@ -335,13 +444,18 @@ void loop()
     // Концевики
     if (endRight.state())
     {
-        if (stepperLR.dir > 0 && stepperLR.getStatus())
+        if (stepperX.dir > 0 && stepperX.getStatus())
         {
-            stepperLR.brake();
-            stepperLR.reset();
+            stepperX.brake();
+            stepperX.reset();
+            stepperY.setSpeed(MOTOR_U_BUTTON_SPEED);
             encoder.resetPos();
             switch (worker)
             {
+            case 5:
+                paper_dat = 0;
+                digitalWrite(PIN_PAPER_DAT, !PAPER_DAT_TRUE);
+                break;
             case 8:
                 // worker = 0;
                 break;
@@ -355,19 +469,34 @@ void loop()
 
     if (endLeft.state())
     {
-        if (stepperLR.dir < 0 && stepperLR.getStatus())
+        if (stepperX.dir < 0 && stepperX.getStatus())
         {
-            stepperLR.brake();
-            stepperLR.reset();
+            stepperX.brake();
+            stepperX.reset();
             encoder.resetPos();
             switch (worker)
             {
+            case 1:
+                switch (worker1)
+                {
+                case 0:
+                    worker1++;
+                    break;
+
+                default:
+                    break;
+                }
+                break;
+            case 5:
+                paper_dat = 0;
+                digitalWrite(PIN_PAPER_DAT, !PAPER_DAT_TRUE);
+                break;
             case 8:
                 // worker = 0;
                 break;
 
             default:
-                worker = 0;
+                // worker = 0;
                 break;
             }
         }
@@ -375,10 +504,10 @@ void loop()
 
     if (endUp.state())
     {
-        if (stepperUD.dir > 0 && stepperUD.getStatus())
+        if (stepperY.dir > 0 && stepperY.getStatus())
         {
-            stepperUD.brake();
-            stepperUD.reset();
+            stepperY.brake();
+            stepperY.reset();
             encoder.resetPos();
             switch (worker)
             {
@@ -387,7 +516,7 @@ void loop()
                 break;
 
             default:
-                worker = 0;
+                // worker = 0;
                 break;
             }
         }
@@ -395,10 +524,10 @@ void loop()
 
     if (endDown.state())
     {
-        if (stepperUD.dir < 0 && stepperUD.getStatus())
+        if (stepperY.dir < 0 && stepperY.getStatus())
         {
-            stepperUD.brake();
-            stepperUD.reset();
+            stepperY.brake();
+            stepperY.reset();
             encoder.resetPos();
             switch (worker)
             {
@@ -407,12 +536,12 @@ void loop()
                 break;
 
             default:
-                worker = 0;
+                // worker = 0;
                 break;
             }
         }
     }
-    stepperUD.tick();
+    stepperY.tick();
 
-    stepperLR.tick();
+    stepperX.tick();
 }

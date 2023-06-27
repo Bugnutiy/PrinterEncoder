@@ -55,7 +55,7 @@ public:
     void encInterrupt();
     void resetEnc();
     void resetPos();
-    int32_t getEncPos();
+    int32_t getPos();
 };
 
 ///////////////////////////////////
@@ -98,16 +98,16 @@ inline void Encoder::encInterrupt()
         _turnFlag = !_turnFlag;
         if (_turnFlag)
 #if ENC_INVERSE
-            _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? -1 : 1;
+            _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? -2 : 2;
 #else
-            _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? 1 : -1;
+            _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? 2 : -2;
 #endif
 
 #else
 #if ENC_INVERSE
-        _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? -1 : 1;
+        _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? -2 : 2;
 #else
-        _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? 1 : -1;
+        _enc_pos += (ENC_READ(PIN_ENC_B) != _lastState) ? 2 : -2;
 #endif
 #endif
         _lastState = _state0;
@@ -196,7 +196,7 @@ inline void Encoder::resetPos()
     _enc_pos = 0;
 }
 
-inline int32_t Encoder::getEncPos()
+inline int32_t Encoder::getPos()
 {
     return _enc_pos;
 }
